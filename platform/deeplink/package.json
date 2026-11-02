@@ -1,0 +1,11 @@
+{
+  "name": "@pp/platform-deeplink",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Deep-link router, parser, cold/warm start handling and allowlist.",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  }
+}

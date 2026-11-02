@@ -1,0 +1,11 @@
+{
+  "name": "@pp/feat-home",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Home tab: balance, shortcuts and recent activity.",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.base.json",
+  "include": [
+    "contracts",
+    "core",
+    "platform",
+    "mockplatform",
+    "services",
+    "features",
+    "design-system",
+    "apps",
+    "harness",
+    "tools"
+  ],
+  "exclude": ["**/node_modules"]
+}

@@ -1,0 +1,11 @@
+{
+  "name": "@pp/core-money",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Paise math, rounding, fee calculation, formatting and parsing.",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "layers": {
+    "contracts": ["contracts"],
+    "core": ["contracts", "core"],
+    "platform": ["contracts", "core", "platform"],
+    "mockplatform": ["contracts", "core", "mockplatform"],
+    "services": ["contracts", "core", "platform", "services"],
+    "design-system": ["contracts", "core", "design-system"],
+    "features": ["contracts", "core", "platform", "services", "design-system"],
+    "apps": [
+      "contracts",
+      "core",
+      "platform",
+      "mockplatform",
+      "services",
+      "design-system",
+      "features"
+    ],
+    "harness": [
+      "contracts",
+      "core",
+      "platform",
+      "mockplatform",
+      "services",
+      "design-system",
+      "features",
+      "harness"
+    ],
+    "tools": ["contracts", "tools"]
+  },
+  "ownPackageOnly": ["features"],
+  "testExtra": ["mockplatform", "harness"]
+}

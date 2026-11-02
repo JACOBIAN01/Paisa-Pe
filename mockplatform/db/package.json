@@ -1,0 +1,11 @@
+{
+  "name": "@pp/mock-db",
+  "version": "0.0.0",
+  "private": true,
+  "description": "In-memory database with persistence and seeded fixtures.",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  }
+}

@@ -1,0 +1,9 @@
+node_modules
+.turbo
+.expo
+dist
+coverage
+pnpm-lock.yaml
+private/bugs/patches
+private/fixes
+student-export

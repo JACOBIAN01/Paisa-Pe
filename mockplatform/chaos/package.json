@@ -1,0 +1,11 @@
+{
+  "name": "@pp/mock-chaos",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Seeded latency, jitter and failure injection.",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  }
+}

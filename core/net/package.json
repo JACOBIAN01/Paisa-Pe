@@ -1,0 +1,11 @@
+{
+  "name": "@pp/core-net",
+  "version": "0.0.0",
+  "private": true,
+  "description": "HTTP client with interceptors, retry/backoff, abort and idempotency helpers.",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  }
+}

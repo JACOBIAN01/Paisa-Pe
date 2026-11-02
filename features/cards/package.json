@@ -1,0 +1,11 @@
+{
+  "name": "@pp/feat-cards",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Virtual card screens.",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  }
+}

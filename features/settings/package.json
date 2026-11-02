@@ -1,0 +1,11 @@
+{
+  "name": "@pp/feat-settings",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Settings and language.",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  }
+}

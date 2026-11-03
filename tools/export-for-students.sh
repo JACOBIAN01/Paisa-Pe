@@ -25,7 +25,8 @@ trap cleanup EXIT
 mkdir -p "$STAGE/project"
 tar -C "$ROOT" \
   --exclude='.git' --exclude='.gitignore' --exclude='node_modules' --exclude='.turbo' --exclude='coverage' \
-  --exclude='private' --exclude='student-export' --exclude='tools/inject' --exclude='tools/checks' \
+  --exclude='private' --exclude='student-export' --exclude='PROGRESS.md' --exclude='INSTRUCTOR_BUG_GUIDE.md' \
+  --exclude='tools/CLAUDE.md' --exclude='tools/README.md' --exclude='tools/inject' --exclude='tools/checks' \
   -cf - . | tar -C "$STAGE/project" -xf -
 
 pnpm --dir "$ROOT" inject --seed "$SEED" --count "$COUNT" --target "$STAGE/project"

@@ -12,7 +12,7 @@ export default function SavingsScreen(){
    <Text style={s.saved}>₹{goal.saved.toLocaleString('en-IN')} <Text style={s.target}>of ₹{goal.target.toLocaleString('en-IN')}</Text></Text>
    <ProgressBar value={goal.saved} total={goal.target} color="#16A36A"/>
    <Text style={s.due}>{Math.min(100,Math.round(goal.saved/goal.target*100))}% completed</Text>
-   <Link href={'/goal-contribution?id='+goal.id} asChild><Pressable style={s.action}><Text style={s.actionText}>Add contribution</Text></Pressable></Link>
+   <Link href={{pathname:'/goal-contribution',params:{goalId:goal.id}}} asChild><Pressable style={s.action}><Text style={s.actionText}>Add contribution</Text></Pressable></Link>
   </View>)}
   <Pressable onPress={()=>router.push('/create-goal')}><PrimaryButton label="Create a savings goal"/></Pressable>
  </ScrollView></Screen>;

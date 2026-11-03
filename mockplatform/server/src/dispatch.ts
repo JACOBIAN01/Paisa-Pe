@@ -1,4 +1,3 @@
-import { ZodError } from 'zod';
 import type { EndpointName } from '@pp/contracts-api';
 import type { Database } from '@pp/mock-db';
 import { authenticate } from './auth-check';
@@ -18,9 +17,11 @@ const parse = (
   try {
     return schema.parse(input);
   } catch (error) {
-    if (error instanceof ZodError) {
+    const issues = (error as { issues?: Array<{ path: Array<string | number>; message: string }> })
+      .issues;
+    if (Array.isArray(issues)) {
       throw fail('invalid_request', `Invalid ${what}`, {
-        issues: error.issues.map((i) => ({ path: i.path.join('.'), message: i.message })),
+        issues: issues.map((i) => ({ path: i.path.join('.'), message: i.message })),
       });
     }
     throw error;

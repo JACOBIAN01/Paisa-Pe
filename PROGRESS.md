@@ -10,6 +10,7 @@ Read this first when resuming in a new session.
 ## Done
 
 ### Phase 0: Foundation
+
 - pnpm + Turborepo monorepo, strict TypeScript, Prettier, ESLint 8 (boundaries, import, react-hooks), dependency-cruiser, Jest (ts-jest).
 - 64 workspace packages scaffolded from `tools/gen/registry.ts` (stub `index.ts`, README, CLAUDE.md, tsconfig, package.json each). Path aliases and CODEOWNERS are generated.
 - Layer rules defined once in `tools/gen/layers.json`; proven to reject upward imports, cross-feature imports, deep imports, relative cross-package imports and cycles.

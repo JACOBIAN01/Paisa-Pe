@@ -1,17 +1,26 @@
-From 4b85e286039c6c0907a03ddf1ce6c34063a1c814 Mon Sep 17 00:00:00 2001
+From 0f322cf34f17fcec8524e046d4ca335248f6cb23 Mon Sep 17 00:00:00 2001
 From: JACOBIAN01 <subhadeepghorai23@gmail.com>
-Date: Tue, 3 Nov 2026 09:34:49 +0530
+Date: Tue, 3 Nov 2026 09:41:12 +0530
 Subject: [PATCH] Simplify lock state timing
 
 ---
- services/auth/src/lockout.ts     | 11 ++---------
+ services/auth/src/lockout.ts     | 13 +++----------
  services/auth/src/pin-service.ts |  3 +--
- 2 files changed, 3 insertions(+), 11 deletions(-)
+ 2 files changed, 4 insertions(+), 12 deletions(-)
 
 diff --git a/services/auth/src/lockout.ts b/services/auth/src/lockout.ts
-index fc3733d..6293caf 100644
+index fc3733d..1e12237 100644
 --- a/services/auth/src/lockout.ts
 +++ b/services/auth/src/lockout.ts
+@@ -49,7 +49,7 @@ const isRecord = (raw: unknown): raw is LockoutRecord =>
+   raw !== null &&
+   typeof (raw as LockoutRecord).failedAttempts === 'number';
+ 
+-export function createLockout({ storageFor, clock, bootId }: LockoutDeps): Lockout {
++export function createLockout({ storageFor, clock }: LockoutDeps): Lockout {
+   const load = async (userId: string): Promise<LockoutRecord> =>
+     (await storageFor(userId).getJSON(LOCKOUT_KEY, (raw) => (isRecord(raw) ? raw : null))) ?? {
+       failedAttempts: 0,
 @@ -59,15 +59,8 @@ export function createLockout({ storageFor, clock, bootId }: LockoutDeps): Locko
      storageFor(userId).setJSON(LOCKOUT_KEY, record);
  

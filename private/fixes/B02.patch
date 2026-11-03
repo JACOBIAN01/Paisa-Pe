@@ -1,8 +1,17 @@
 diff --git a/services/auth/src/lockout.ts b/services/auth/src/lockout.ts
-index 6293caf..fc3733d 100644
+index 1e12237..fc3733d 100644
 --- a/services/auth/src/lockout.ts
 +++ b/services/auth/src/lockout.ts
-@@ -59,8 +59,15 @@ export function createLockout({ storageFor, clock, bootId }: LockoutDeps): Locko
+@@ -49,7 +49,7 @@ const isRecord = (raw: unknown): raw is LockoutRecord =>
+   raw !== null &&
+   typeof (raw as LockoutRecord).failedAttempts === 'number';
+ 
+-export function createLockout({ storageFor, clock }: LockoutDeps): Lockout {
++export function createLockout({ storageFor, clock, bootId }: LockoutDeps): Lockout {
+   const load = async (userId: string): Promise<LockoutRecord> =>
+     (await storageFor(userId).getJSON(LOCKOUT_KEY, (raw) => (isRecord(raw) ? raw : null))) ?? {
+       failedAttempts: 0,
+@@ -59,8 +59,15 @@ export function createLockout({ storageFor, clock }: LockoutDeps): Lockout {
      storageFor(userId).setJSON(LOCKOUT_KEY, record);
  
    function remainingFor(lock: NonNullable<LockoutRecord['lock']>): number {

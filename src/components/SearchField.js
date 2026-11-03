@@ -1,0 +1,4 @@
+import {StyleSheet,TextInput,View} from 'react-native';
+import {Ionicons} from '@expo/vector-icons';
+export function SearchField({value,onChangeText,placeholder='Search...'}){return <View style={s.wrap}><Ionicons name="search-outline" size={18} color="#85869A"/><TextInput value={value} onChangeText={onChangeText} placeholder={placeholder} style={s.input}/></View>;}
+const s=StyleSheet.create({wrap:{height:48,borderRadius:14,backgroundColor:'#FFFFFF',borderWidth:1,borderColor:'#EEEEF4',flexDirection:'row',alignItems:'center',paddingHorizontal:14,gap:9},input:{flex:1,color:'#303047',fontSize:13}});

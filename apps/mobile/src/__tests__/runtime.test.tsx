@@ -1,5 +1,6 @@
+import { useEffect } from 'react';
 import { Text } from 'react-native';
-import { act, render, screen } from '@testing-library/react-native';
+import { act, render, screen, waitFor } from '@testing-library/react-native';
 import { installMemoryAppStorage, resetTestEnvironment } from '@pp/harness';
 import { lockStore } from '@pp/platform-lifecycle';
 import { LEDGER } from '@pp/svc-ledger';
@@ -66,5 +67,38 @@ describe('AppProviders', () => {
     );
     expect(await screen.findByTestId('lock')).toBeTruthy();
     expect(screen.queryByTestId('content')).toBeNull();
+  });
+
+  it('remounts the app content when the signed-in account changes', async () => {
+    runtime = createAppRuntime();
+    let mounts = 0;
+    function Probe() {
+      useEffect(() => {
+        mounts += 1;
+      }, []);
+      return <Text testID="content">home</Text>;
+    }
+    await render(
+      <AppProviders runtime={runtime}>
+        <Probe />
+      </AppProviders>,
+    );
+    await act(async () => {
+      await runtime?.whenIdle();
+    });
+    await screen.findByTestId('content');
+    const before = mounts;
+
+    await act(async () => {
+      await signIn(runtime as AppRuntime);
+    });
+    await waitFor(() => expect(mounts).toBeGreaterThan(before));
+    const afterSignIn = mounts;
+
+    await act(async () => {
+      await runtime?.auth.logout();
+      await runtime?.whenIdle();
+    });
+    await waitFor(() => expect(mounts).toBeGreaterThan(afterSignIn));
   });
 });

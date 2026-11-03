@@ -79,10 +79,14 @@ export function createLedger(deps: LedgerDeps): Ledger {
   };
 
   const onReceived = (txn: AppEventMap['payment.received']['txn']): void => {
-    const isNew = recordTxn(txn);
+    recordTxn(txn);
     const delta = txnDelta(txn);
-    if (!isNew || delta === 0) return;
-    const credit: PendingDelta = { id: `rx:${txn.id}`, kind: 'credit', delta, at: txn.updatedAt };
+    const id = `rx:${txn.id}`;
+    // The sync service may have recorded the txn already; what matters is whether the
+    // server balance we hold includes it, and whether we have booked this credit before.
+    if (delta === 0 || txn.updatedAt <= state.asOf || state.pending.some((p) => p.id === id))
+      return;
+    const credit: PendingDelta = { id, kind: 'credit', delta, at: txn.updatedAt };
     commit({ ...state, pending: [...state.pending, credit] });
     emitChanged('payment');
   };

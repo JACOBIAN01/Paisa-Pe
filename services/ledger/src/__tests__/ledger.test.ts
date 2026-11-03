@@ -111,6 +111,22 @@ describe('payment.received', () => {
     expect(ledger.projectedBalance()).toBe(10_500);
   });
 
+  it('still credits when the txn was recorded before the event (as the sync service does)', () => {
+    const { ledger, bus } = build();
+    ledger.applyServerBalance(view(10_000, 1, 1_000));
+    const txn = incoming('t3', 900, 2_000);
+    ledger.recordTxn(txn);
+    bus.emit('payment.received', { txn });
+    expect(ledger.projectedBalance()).toBe(10_900);
+  });
+
+  it('does not credit a txn the server balance already includes', () => {
+    const { ledger, bus } = build();
+    ledger.applyServerBalance(view(10_900, 1, 3_000));
+    bus.emit('payment.received', { txn: incoming('t4', 900, 2_000) });
+    expect(ledger.projectedBalance()).toBe(10_900);
+  });
+
   it('stops listening after dispose', () => {
     const { ledger, bus } = build();
     ledger.applyServerBalance(view(10_000, 1));

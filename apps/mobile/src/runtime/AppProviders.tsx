@@ -1,4 +1,4 @@
-import { useEffect, useState, useSyncExternalStore, type ReactNode } from 'react';
+import { Fragment, useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { ContainerProvider } from '@pp/core-di';
 import { appBus } from '@pp/core-event-bus';
@@ -51,6 +51,15 @@ function useLanguageFromPreferences(runtime: AppRuntime, enabled: boolean): void
   }, [runtime, enabled]);
 }
 
+/** A number that changes whenever `value` is a different object from the previous render. */
+function useIdentityKey(value: object): number {
+  const last = useRef<{ value: object; key: number } | null>(null);
+  if (last.current === null || last.current.value !== value) {
+    last.current = { value, key: (last.current?.key ?? 0) + 1 };
+  }
+  return last.current.key;
+}
+
 /**
  * Root providers. Nothing renders until the lock state and saved sessions have
  * been read; once they have, a locked app shows `lockScreen` rather than content.
@@ -58,6 +67,8 @@ function useLanguageFromPreferences(runtime: AppRuntime, enabled: boolean): void
 export function AppProviders({ runtime, lockScreen, children }: AppProvidersProps) {
   const [started, setStarted] = useState(false);
   const container = useSyncExternalStore(runtime.subscribeContainer, runtime.getContainer);
+  // Screens keep per-account state (feeds, drafts, filters), so each set of services gets a fresh tree.
+  const containerKey = useIdentityKey(container);
   const lockHydrated = useHydrated(lockStore);
   const locked = useIsLocked();
   const shield = usePrivacyShield();
@@ -80,7 +91,13 @@ export function AppProviders({ runtime, lockScreen, children }: AppProvidersProp
       <QueryClientProvider client={runtime.queryClient}>
         <ThemeProvider>
           <ToastProvider>
-            {!ready ? <Splash /> : locked ? (lockScreen ?? <Splash />) : children}
+            {!ready ? (
+              <Splash />
+            ) : locked ? (
+              (lockScreen ?? <Splash />)
+            ) : (
+              <Fragment key={containerKey}>{children}</Fragment>
+            )}
             {shield && ready ? <PrivacyCover /> : null}
           </ToastProvider>
         </ThemeProvider>

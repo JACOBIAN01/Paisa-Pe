@@ -6,3 +6,5 @@ export { expoHasher, DEFAULT_PIN_ROUNDS } from './hasher';
 export type { PinHasher } from './hasher';
 export { ATTEMPTS_PER_LOCK, BASE_LOCK_MS, MAX_LOCK_MS, lockDurationFor } from './lockout';
 export type { AccountInfo, AuthBus, AuthSnapshot } from './types';
+export { AUTH_SERVICE, PIN_SERVICE } from './token';
+export { useAuthState } from './use-auth-state';

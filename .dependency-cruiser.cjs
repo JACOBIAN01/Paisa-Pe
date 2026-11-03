@@ -13,8 +13,8 @@ const layerRules = all.flatMap((layer) => {
     to: { path: all.filter((o) => !allowed.includes(o)).map((o) => `^${o}(/|$)`) },
   });
   return [
-    rule('', layers[layer], { pathNot: TEST_PATH }),
-    rule('-tests', [...layers[layer], ...testExtra], {
+    rule('', [layer, ...layers[layer]], { pathNot: TEST_PATH }),
+    rule('-tests', [layer, ...layers[layer], ...testExtra], {
       path: [`^${layer}(/|$)`, TEST_PATH].join('.*'),
     }),
   ];

@@ -9,3 +9,4 @@ export type { SecureBackend, SecureStorage } from './secure';
 export { createStorage, withJson, withPrefix } from './storage';
 export type { StorageOptions } from './storage';
 export type { Entry, JsonStore, KeyValueStore } from './types';
+export { SECURE_STORAGE, USER_STORAGE } from './tokens';

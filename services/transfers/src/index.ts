@@ -5,3 +5,4 @@ export { parseTransferParams } from './params';
 export type { RawParams, TransferParams } from './params';
 export { createTransferService } from './service';
 export type { TransferService, TransferServiceDeps } from './service';
+export { TRANSFER_SERVICE } from './token';

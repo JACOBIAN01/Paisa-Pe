@@ -9,3 +9,4 @@ export { useMutation } from './use-mutation';
 export type { UseMutationOptions, UseMutationResult } from './use-mutation';
 export { useQuery } from './use-query';
 export type { UseQueryOptions, UseQueryResult } from './use-query';
+export { QUERY_CLIENT } from './token';

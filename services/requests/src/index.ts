@@ -10,3 +10,4 @@ export type { ParticipantRef, SplitMode, SplitParticipant, SplitPlan } from './s
 export { emptyInbox, pendingIncomingCount, selectRequests } from './inbox';
 export type { Direction, InboxState } from './inbox';
 export { createIntentId } from './intent';
+export { REQUESTS_SERVICE } from './token';

@@ -50,3 +50,19 @@ jobs:
 
       - name: Export Android JavaScript bundle
         run: npx expo export --platform android
+
+      - name: Verify Metro development server startup
+        shell: bash
+        run: |
+          npx expo start --non-interactive --port 8081 > /tmp/paisape-metro.log 2>&1 &
+          PID=$!
+          trap 'kill "$PID" 2>/dev/null || true' EXIT
+          for attempt in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:8081/status >/dev/null; then
+              echo "Metro development server is ready."
+              exit 0
+            fi
+            sleep 2
+          done
+          cat /tmp/paisape-metro.log
+          exit 1

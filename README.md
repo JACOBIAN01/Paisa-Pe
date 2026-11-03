@@ -1,18 +1,18 @@
 # PaisaPe — React Native Bug Bounty
 
-PaisaPe is a simplified wallet app for finding bugs in React, React Native, and Expo. It uses local mock data only. No real payments, accounts, or credentials are involved.
+PaisaPe is a simplified wallet app for finding bugs in React, React Native and Expo. It uses local mock data only. No real payments, accounts, or credentials are involved.
 
 ## Learning scope
 
 - React: components, props, state, context, hooks, lists, keys, derived values and effects.
 - React Native: View, Text, Pressable, TextInput, ScrollView, FlatList, Switch, StyleSheet and accessibility.
-- Expo: Expo Router navigation, device information, app configuration, notifications and platform APIs.
+- Expo: Expo Router navigation, app configuration, device information, notifications and platform APIs.
 
 ## Setup
 
 Requirements: Node.js 20+ and npm.
 
-    npm install
+    npm ci
     npx expo start
 
 Open with Expo Go or a development build. Press i for the iOS simulator or a for an Android emulator.
@@ -23,12 +23,18 @@ Open with Expo Go or a development build. Press i for the iOS simulator or a for
       (tabs)/             Home, Activity, Profile
       send.js             Send money form
       confirm.js          Payment confirmation
-      request.js          Request money
+      request.js          Request money form
+      requests.js         Request history
       add-money.js        Add money
     src/
       components/         Reusable UI and transaction row
       context/            Wallet state
       utils/              Formatting helpers
+    SMOKE_TESTS.md        iOS and Android verification checklist
+
+## Validation
+
+The challenge branch includes a GitHub Actions workflow that generates the npm lockfile, installs with `npm ci`, runs Expo Doctor and exports both iOS and Android JavaScript bundles. See `SMOKE_TESTS.md` for manual simulator/device checks.
 
 ## Bug bounty rules
 

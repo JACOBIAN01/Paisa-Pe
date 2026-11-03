@@ -1,0 +1,48 @@
+name: Validate PaisaPe
+
+on:
+  push:
+    branches:
+      - bug-bounty/25-seed-refresh
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  install-doctor-and-export:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout challenge branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Generate and commit npm lockfile
+        shell: bash
+        run: |
+          npm install --package-lock-only --ignore-scripts
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if ! git diff --quiet -- package-lock.json; then
+            git add package-lock.json
+            git commit -m "chore: add npm lockfile"
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi
+
+      - name: Install exactly from lockfile
+        run: npm ci
+
+      - name: Check Expo dependencies and configuration
+        run: npx expo-doctor
+
+      - name: Export iOS JavaScript bundle
+        run: npx expo export --platform ios
+
+      - name: Export Android JavaScript bundle
+        run: npx expo export --platform android

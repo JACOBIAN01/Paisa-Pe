@@ -5,6 +5,7 @@ on:
     branches:
       - bug-bounty/25-seed-refresh
       - feature/basic-react-native-expansion
+      - feature/progressive-bug-bounty
   workflow_dispatch:
 
 permissions:

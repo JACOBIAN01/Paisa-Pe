@@ -1,12 +1,28 @@
 # PaisaPe — React Native Bug Bounty
 
-PaisaPe is a simplified wallet app for finding bugs in React, React Native and Expo. It uses local mock data only. No real payments, accounts, or credentials are involved.
+PaisaPe is a beginner-friendly mock wallet app for exploring bugs in JavaScript, React, React Native and Expo. It uses local sample data only. No real payments, bank accounts or credentials are involved.
 
 ## Learning scope
 
-- React: components, props, state, context, hooks, lists, keys, derived values and effects.
-- React Native: View, Text, Pressable, TextInput, ScrollView, FlatList, Switch, StyleSheet and accessibility.
-- Expo: Expo Router navigation, app configuration, device information, notifications and platform APIs.
+- JavaScript fundamentals: arrays, objects, functions, map, filter and reduce.
+- React: functional components, props, useState, useEffect, useMemo, useContext and simple custom hooks.
+- React Native: View, Text, Pressable, TextInput, ScrollView, FlatList, Switch, StyleSheet, Alert and basic keyboard handling.
+- Expo: Expo Router navigation and basic device/platform APIs.
+
+No TypeScript, Redux, backend, database, real payment gateway or advanced architecture is required.
+
+## Demo features
+
+- Wallet balance, add money, send money and request history.
+- Virtual cards with freeze/unfreeze controls.
+- Monthly budgets and category-wise spending.
+- Savings goals and contributions.
+- Sample electricity, mobile, water and internet bills.
+- Beneficiary list and search.
+- Monthly spending reports.
+- Recurring payment overview.
+- FAQs and local support tickets.
+- Notification history and transaction search.
 
 ## Setup
 
@@ -21,27 +37,27 @@ Open with Expo Go or a development build. Press i for the iOS simulator or a for
 
     app/                  Expo Router screens
       (tabs)/             Home, Activity, Profile
-      send.js             Send money form
-      confirm.js          Payment confirmation
-      request.js          Request money form
-      requests.js         Request history
-      add-money.js        Add money
+      cards.js            Virtual card management
+      budgets.js          Monthly budget overview
+      savings.js          Savings goals
+      bills.js            Sample bill payments
+      beneficiaries.js    Saved people
+      reports.js          Spending reports
+      support.js          FAQs and support tickets
     src/
-      components/         Reusable UI and transaction row
-      context/            Wallet state
-      utils/              Formatting helpers
-    SMOKE_TESTS.md        iOS and Android verification checklist
+      components/         Reusable React Native UI
+      context/            Wallet and feature state
+      data/               Local sample data
+      utils/              Small formatting helpers
 
-## Validation
+## Important
 
-The challenge branch includes a GitHub Actions workflow that generates the npm lockfile, installs with `npm ci`, runs Expo Doctor and exports both iOS and Android JavaScript bundles. See `SMOKE_TESTS.md` for manual simulator/device checks.
+Every feature is a local demonstration. State resets when the app restarts. Bill payments, card controls and wallet transfers do not connect to external financial services.
 
 ## Bug bounty rules
 
 1. Find and report bugs in app code only.
-2. Do not attack real payment systems, external services, accounts, devices or networks.
+2. Do not attack external services, accounts, devices or networks.
 3. Do not modify the app to make a finding disappear.
 4. Submit one finding per report with reproduction steps, expected result, actual result, impact, affected file and suggested fix.
 5. Do not reveal or publish instructor answer keys.
-
-All wallet operations are local and reset when the app restarts.

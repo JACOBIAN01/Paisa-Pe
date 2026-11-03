@@ -23,18 +23,19 @@ jobs:
         with:
           node-version: 20
 
-      - name: Generate and commit npm lockfile
+      - name: Resolve Expo SDK peer dependencies and generate lockfile
         shell: bash
         run: |
           npm install --package-lock-only --ignore-scripts
+          npm ci
+          npx expo install expo-font expo-linking
+          npm install --package-lock-only --ignore-scripts
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if [ -f package-lock.json ]; then
-            git add package-lock.json
-            if ! git diff --cached --quiet; then
-              git commit -m "chore: add or refresh npm lockfile"
-              git push origin "HEAD:${GITHUB_REF_NAME}"
-            fi
+          git add package.json package-lock.json
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: add lockfile and Expo peer dependencies"
+            git push origin "HEAD:${GITHUB_REF_NAME}"
           fi
 
       - name: Install exactly from lockfile

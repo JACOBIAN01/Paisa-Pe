@@ -28,7 +28,7 @@ jobs:
         run: |
           npm install --package-lock-only --ignore-scripts
           npm ci
-          npx expo install expo-font expo-linking
+          npx expo install expo-font expo-linking babel-preset-expo
           npm install --package-lock-only --ignore-scripts
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

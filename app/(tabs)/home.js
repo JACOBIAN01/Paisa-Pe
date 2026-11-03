@@ -16,7 +16,7 @@ export default function HomeScreen(){
   </View>
   <Card style={styles.balanceCard}><View style={styles.balanceTop}><Text style={styles.balanceLabel}>Total balance</Text>
    <Pressable onPress={()=>setShowBalance(!showBalance)}><Ionicons name={showBalance?'eye-outline':'eye-off-outline'} size={21} color="#DADAFB"/></Pressable>
-  </View><Text style={styles.balance}>{showBalance?money(balance):'₹ ••••••'}</Text><Text style={styles.balanceFoot}>Your money, in one place</Text></Card>
+  </View><Text style={styles.balance}>{showBalance?'₹ ••••••':money(balance)}</Text><Text style={styles.balanceFoot}>Your money, in one place</Text></Card>
   <View style={styles.shortcuts}>{shortcuts.map(item=><Link key={item.label} href={item.href} asChild><Pressable style={styles.shortcut}>
    <View style={styles.shortcutIcon}><Ionicons name={item.icon} size={23} color="#5B5CE2"/></View><Text style={styles.shortcutText}>{item.label}</Text>
   </Pressable></Link>)}</View>

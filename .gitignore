@@ -1,9 +1,6 @@
-node_modules
-.turbo
-.expo
-dist
-coverage
-*.log
+node_modules/
+.expo/
+dist/
+web-build/
 .DS_Store
-student-export
-.claude/
+npm-debug.log*

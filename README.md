@@ -1,31 +1,41 @@
-# PaisaPe Platform student exercise
+# PaisaPe — React Native Bug Bounty
 
-PaisaPe is a deterministic React Native wallet training project. Your task is to find client-side
-behavioural defects and prove each claim with a repeatable Jest test.
+PaisaPe is a simplified wallet app for finding bugs in React, React Native, and Expo. It uses local mock data only. No real payments, accounts, or credentials are involved.
+
+## Learning scope
+
+- React: components, props, state, context, hooks, lists, keys, derived values and effects.
+- React Native: View, Text, Pressable, TextInput, ScrollView, FlatList, Switch, StyleSheet and accessibility.
+- Expo: Expo Router navigation, device information, app configuration, notifications and platform APIs.
 
 ## Setup
 
-Use Node 20 or newer and pnpm 9. Install dependencies with `pnpm install`, then run `pnpm check`.
-Start the Expo app with `pnpm --filter @pp/app-mobile start`. The mock platform is in-process; do
-not use real accounts, devices or network services.
+Requirements: Node.js 20+ and npm.
 
-## Test kit
+    npm install
+    npx expo start
 
-Read `harness/README.md` first. `createTestApp` gives each test an isolated seeded backend,
-controllable clock, storage and service container. Use `renderWithApp` for screens, and use the
-provided platform fakes for links, AppState, notifications and clipboard state. A good proof has no
-real sleeps and gives the same result on repeated runs.
+Open with Expo Go or a development build. Press i for the iOS simulator or a for an Android emulator.
 
-## Rules
+## Project structure
 
-- Work only inside this repository and use public package entry points.
-- Do not change the mock server, harness or existing tests to make a proof pass.
-- Do not report a suspicion: submit a deterministic test that fails on this tree and passes after a
-  correct fix.
-- Keep one finding per submission and do not use external services.
+    app/                  Expo Router screens
+      (tabs)/             Home, Activity, Profile
+      send.js             Send money form
+      confirm.js          Payment confirmation
+      request.js          Request money
+      add-money.js        Add money
+    src/
+      components/         Reusable UI and transaction row
+      context/            Wallet state
+      utils/              Formatting helpers
 
-## Submission
+## Bug bounty rules
 
-Create `submissions/<finding>.test.tsx`. Next to it, add a five-line note describing the observed
-behaviour, affected files/packages, root cause, user impact and proposed fix. Run your test five
-times before submitting it.
+1. Find and report bugs in app code only.
+2. Do not attack real payment systems, external services, accounts, devices or networks.
+3. Do not modify the app to make a finding disappear.
+4. Submit one finding per report with reproduction steps, expected result, actual result, impact, affected file and suggested fix.
+5. Do not reveal or publish instructor answer keys.
+
+All wallet operations are local and reset when the app restarts.

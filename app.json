@@ -1,0 +1,8 @@
+{
+  "expo":{
+    "name":"PaisaPe","slug":"paisape","version":"1.0.0","orientation":"portrait",
+    "scheme":"paisape","userInterfaceStyle":"light","newArchEnabled":true,
+    "ios":{"supportsTablet":false},"android":{"edgeToEdgeEnabled":true},
+    "plugins":["expo-router"]
+  }
+}

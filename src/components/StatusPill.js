@@ -1,0 +1,3 @@
+import {StyleSheet,Text,View} from 'react-native';
+export function StatusPill({label,positive=false}){const bg=positive?'#E8F8EF':'#FFF4E5';const color=positive?'#16834B':'#A86412';return <View style={[s.pill,{backgroundColor:bg}]}><Text style={[s.text,{color}]}>{label}</Text></View>;}
+const s=StyleSheet.create({pill:{paddingHorizontal:10,paddingVertical:5,borderRadius:20,alignSelf:'flex-start'},text:{fontSize:10,fontWeight:'800'}});

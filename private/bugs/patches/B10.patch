@@ -1,0 +1,48 @@
+From 845a9d43aa5cd8c29ed1af54d65c8db2010fc3c3 Mon Sep 17 00:00:00 2001
+From: JACOBIAN01 <subhadeepghorai23@gmail.com>
+Date: Tue, 3 Nov 2026 09:37:53 +0530
+Subject: [PATCH] Reuse incoming link subscriptions
+
+---
+ features/send-money/src/hooks/useTransferParams.ts | 4 ++--
+ platform/deeplink/src/use-deep-links.ts            | 3 +--
+ 2 files changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/features/send-money/src/hooks/useTransferParams.ts b/features/send-money/src/hooks/useTransferParams.ts
+index d64c44f..7d4ca50 100644
+--- a/features/send-money/src/hooks/useTransferParams.ts
++++ b/features/send-money/src/hooks/useTransferParams.ts
+@@ -10,12 +10,12 @@ export type ParsedParams = { ok: true; value: TransferParams } | { ok: false; me
+  */
+ export function useTransferParams(): ParsedParams {
+   const raw = useLocalSearchParams();
+-  const signature = JSON.stringify(raw);
++  const paramSignature = JSON.stringify(raw);
+   return useMemo(() => {
+     const result = parseTransferParams(raw as Record<string, string | string[] | undefined>);
+     return result.ok
+       ? { ok: true, value: result.value }
+       : { ok: false, message: result.error.message };
+     // eslint-disable-next-line react-hooks/exhaustive-deps -- `signature` is the stable identity of `raw`
+-  }, [signature]);
++  }, [paramSignature]);
+ }
+diff --git a/platform/deeplink/src/use-deep-links.ts b/platform/deeplink/src/use-deep-links.ts
+index ee4e223..e5fe7d7 100644
+--- a/platform/deeplink/src/use-deep-links.ts
++++ b/platform/deeplink/src/use-deep-links.ts
+@@ -1,10 +1,9 @@
+ import { useEffect } from 'react';
+ import type { DeepLinkRouter } from './router';
+ 
+-/** Starts the router on mount and always tears it down on unmount. */
++/** Starts the router when the owning screen is mounted. */
+ export function useDeepLinks(router: DeepLinkRouter): void {
+   useEffect(() => {
+     void router.start();
+-    return () => router.dispose();
+   }, [router]);
+ }
+-- 
+2.50.1 (Apple Git-155)
+

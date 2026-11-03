@@ -1,0 +1,32 @@
+diff --git a/core/money/src/parse.ts b/core/money/src/parse.ts
+index f5e7671..dcddc49 100644
+--- a/core/money/src/parse.ts
++++ b/core/money/src/parse.ts
+@@ -34,10 +34,10 @@ export function parseAmount(input: string, options: ParseAmountOptions = {}): Pa
+   const text = normalizeAmountText(input);
+   if (text === '') return null;
+ 
+-  const decimalIndex = text.indexOf('.');
+-  if (decimalIndex !== text.lastIndexOf('.')) return null;
+-  const integerText = decimalIndex === -1 ? text : text.slice(0, decimalIndex);
+-  const fractionText = decimalIndex === -1 ? '' : text.slice(decimalIndex + 1);
++  const dot = text.indexOf('.');
++  if (dot !== text.lastIndexOf('.')) return null;
++  const integerText = dot === -1 ? text : text.slice(0, dot);
++  const fractionText = dot === -1 ? '' : text.slice(dot + 1);
+ 
+   if (fractionText.length > 2 || !/^\d*$/.test(fractionText)) return null;
+   if (integerText === '' && fractionText === '') return null;
+diff --git a/design-system/src/components/AmountInput.tsx b/design-system/src/components/AmountInput.tsx
+index 1ec4794..c504b6f 100644
+--- a/design-system/src/components/AmountInput.tsx
++++ b/design-system/src/components/AmountInput.tsx
+@@ -24,7 +24,7 @@ export function AmountInput({
+ 
+   const handleChange = (text: string) => {
+     const formatted = formatAmountInput(text);
+-    onChangeValue(formatted, parseAmount(text));
++    onChangeValue(formatted, parseAmount(formatted));
+   };
+ 
+   return (

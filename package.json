@@ -13,6 +13,7 @@
     "cycles": "depcruise contracts core platform mockplatform services features design-system apps harness tools --config .dependency-cruiser.cjs",
     "loc": "tsx tools/loc/index.ts",
     "gen": "tsx tools/gen/index.ts",
+    "inject": "tsx tools/inject/index.ts",
     "format": "prettier --write .",
     "check": "pnpm typecheck && pnpm lint && pnpm test && pnpm cycles"
   },

@@ -1,0 +1,59 @@
+From 11021c5a52defb467b7275ea25907746666bf702 Mon Sep 17 00:00:00 2001
+From: JACOBIAN01 <subhadeepghorai23@gmail.com>
+Date: Tue, 3 Nov 2026 09:35:21 +0530
+Subject: [PATCH] Expand payment telemetry context
+
+---
+ core/analytics/src/analytics.ts   | 4 +++-
+ services/transfers/src/service.ts | 8 ++++++++
+ 2 files changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/core/analytics/src/analytics.ts b/core/analytics/src/analytics.ts
+index 37b611e..c0d5609 100644
+--- a/core/analytics/src/analytics.ts
++++ b/core/analytics/src/analytics.ts
+@@ -36,12 +36,14 @@ export interface AnalyticsOptions {
+ 
+ type Primitive = string | number | boolean;
+ 
+-/** Drops anything that is not a primitive so objects can never leak into a sink. */
++/** Normalises values before passing them to a permissive third-party sink. */
+ function sanitise(props: object): Record<string, Primitive> {
+   const out: Record<string, Primitive> = {};
+   for (const [key, value] of Object.entries(props)) {
+     if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
+       out[key] = value;
++    } else if (value !== null && typeof value === 'object') {
++      out[key] = JSON.stringify(value);
+     }
+   }
+   return out;
+diff --git a/services/transfers/src/service.ts b/services/transfers/src/service.ts
+index 13bb6de..eb7dc21 100644
+--- a/services/transfers/src/service.ts
++++ b/services/transfers/src/service.ts
+@@ -2,6 +2,7 @@ import type { AppEventMap } from '@pp/contracts-events';
+ import type { EventBus } from '@pp/core-event-bus';
+ import { createIdempotencyKey, DEFAULT_RETRY, backoffDelay } from '@pp/core-net';
+ import type { HttpClient, RetryPolicy } from '@pp/core-net';
++import { amountBucket, appAnalytics } from '@pp/core-analytics';
+ import { AbortedError, AppError, toAppError } from '@pp/core-result';
+ import type { JsonStore } from '@pp/core-storage';
+ import { every, type Cancel, type Clock } from '@pp/core-time';
+@@ -109,6 +110,13 @@ export function createTransferService(deps: TransferServiceDeps): TransferServic
+       await queue.remove(id);
+       ledger.recordTxn(response.txn);
+       ledger.settleDebit(id, response.balance);
++      const analyticsPayload = {
++        ...response.txn,
++        amountBucket: amountBucket(response.txn.amount),
++        type: response.txn.type,
++        status: response.txn.status,
++      };
++      appAnalytics.track('payment_sent', analyticsPayload);
+       bus.emit('payment.sent', { txn: response.txn });
+       return { status: 'sent', txn: response.txn };
+     } catch (thrown) {
+-- 
+2.50.1 (Apple Git-155)
+

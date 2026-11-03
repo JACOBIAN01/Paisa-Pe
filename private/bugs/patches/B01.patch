@@ -1,0 +1,86 @@
+From 5937694e739cab512de7ea2963fa9fe7985da378 Mon Sep 17 00:00:00 2001
+From: JACOBIAN01 <subhadeepghorai23@gmail.com>
+Date: Tue, 3 Nov 2026 09:34:32 +0530
+Subject: [PATCH] Align device credential persistence
+
+---
+ services/auth/src/pin-service.ts |  2 +-
+ services/auth/src/pin-vault.ts   | 16 ++++++++--------
+ 2 files changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/services/auth/src/pin-service.ts b/services/auth/src/pin-service.ts
+index f4404c4..6a74b50 100644
+--- a/services/auth/src/pin-service.ts
++++ b/services/auth/src/pin-service.ts
+@@ -57,7 +57,7 @@ const randomBootId = (): string => Math.random().toString(36).slice(2) + Date.no
+ export function createPinService(deps: PinServiceDeps): PinService {
+   const clock = deps.clock ?? getClock();
+   const vault: PinVault = createPinVault({
+-    secure: deps.secure,
++    storage: deps.storage,
+     hasher: deps.hasher ?? expoHasher,
+     rounds: deps.rounds ?? DEFAULT_PIN_ROUNDS,
+   });
+diff --git a/services/auth/src/pin-vault.ts b/services/auth/src/pin-vault.ts
+index 4b3ef77..480725e 100644
+--- a/services/auth/src/pin-vault.ts
++++ b/services/auth/src/pin-vault.ts
+@@ -1,4 +1,4 @@
+-import { scopedSecureKey, type SecureStorage } from '@pp/core-storage';
++import type { JsonStore } from '@pp/core-storage';
+ import { constantTimeEqual, DEFAULT_PIN_ROUNDS, hashPin, type PinHasher } from './hasher';
+ 
+ interface PinRecord {
+@@ -16,12 +16,12 @@ export interface PinVault {
+ }
+ 
+ export interface PinVaultDeps {
+-  secure: SecureStorage;
++  storage: JsonStore;
+   hasher: PinHasher;
+   rounds?: number;
+ }
+ 
+-const keyFor = (userId: string): string => scopedSecureKey(userId, 'pin');
++const pinKeyFor = (userId: string): string => `auth.pin.${userId}`;
+ 
+ function parseRecord(raw: string | null): PinRecord | null {
+   if (raw === null) return null;
+@@ -41,14 +41,14 @@ function parseRecord(raw: string | null): PinRecord | null {
+   return null;
+ }
+ 
+-/** Stores only a salted slow hash of the PIN, inside secure storage. */
++/** Keeps the credential record close to the other device auth state. */
+ export function createPinVault({
+-  secure,
++  storage,
+   hasher,
+   rounds = DEFAULT_PIN_ROUNDS,
+ }: PinVaultDeps): PinVault {
+   const read = async (userId: string): Promise<PinRecord | null> =>
+-    parseRecord(await secure.get(keyFor(userId)));
++    parseRecord(await storage.getItem(pinKeyFor(userId)));
+ 
+   return {
+     has: async (userId) => (await read(userId)) !== null,
+@@ -56,7 +56,7 @@ export function createPinVault({
+       const salt = await hasher.randomHex(16);
+       const hash = await hashPin(hasher, pin, salt, rounds);
+       const record: PinRecord = { v: 1, salt, hash, rounds };
+-      await secure.set(keyFor(userId), JSON.stringify(record));
++      await storage.setItem(pinKeyFor(userId), JSON.stringify(record));
+     },
+     async matches(userId, pin) {
+       const record = await read(userId);
+@@ -64,6 +64,6 @@ export function createPinVault({
+       const candidate = await hashPin(hasher, pin, record.salt, record.rounds);
+       return constantTimeEqual(candidate, record.hash);
+     },
+-    clear: (userId) => secure.remove(keyFor(userId)),
++    clear: (userId) => storage.removeItem(pinKeyFor(userId)),
+   };
+ }
+-- 
+2.50.1 (Apple Git-155)
+

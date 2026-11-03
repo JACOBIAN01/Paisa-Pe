@@ -1,0 +1,17 @@
+diff --git a/platform/lifecycle/src/privacy.ts b/platform/lifecycle/src/privacy.ts
+index e018c92..e0ab635 100644
+--- a/platform/lifecycle/src/privacy.ts
++++ b/platform/lifecycle/src/privacy.ts
+@@ -1,10 +1,10 @@
+ import { useSyncExternalStore } from 'react';
+ import { appStateObserver, type AppStateObserver } from './app-state';
+ 
+-/** Shows the cover once the app has fully moved to the background. */
++/** True whenever the app is not fully active: covers iOS `inactive` and Android task switching. */
+ export function usePrivacyShield(observer: AppStateObserver = appStateObserver): boolean {
+   return useSyncExternalStore(
+     (onChange) => observer.subscribe(onChange),
+-    () => observer.current() === 'background',
++    () => observer.current() !== 'active',
+   );
+ }

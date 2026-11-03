@@ -1,0 +1,49 @@
+From b72c3301769b9016b5562df3bad997d7a6221af1 Mon Sep 17 00:00:00 2001
+From: JACOBIAN01 <subhadeepghorai23@gmail.com>
+Date: Tue, 3 Nov 2026 09:37:30 +0530
+Subject: [PATCH] Align link parameter handling
+
+---
+ platform/deeplink/src/parse.ts   | 3 +--
+ services/transfers/src/params.ts | 4 +---
+ 2 files changed, 2 insertions(+), 5 deletions(-)
+
+diff --git a/platform/deeplink/src/parse.ts b/platform/deeplink/src/parse.ts
+index 8a6c4a8..c5cddc5 100644
+--- a/platform/deeplink/src/parse.ts
++++ b/platform/deeplink/src/parse.ts
+@@ -29,8 +29,7 @@ function parseQuery(query: string | undefined): Record<string, string> | null {
+     const key = decode(eq < 0 ? pair : pair.slice(0, eq));
+     const value = decode(eq < 0 ? '' : pair.slice(eq + 1));
+     if (key === null || value === null || key === '') return null;
+-    if (Object.prototype.hasOwnProperty.call(out, key)) return null;
+-    out[key] = value;
++    if (!Object.prototype.hasOwnProperty.call(out, key)) out[key] = value;
+   }
+   return out;
+ }
+diff --git a/services/transfers/src/params.ts b/services/transfers/src/params.ts
+index 2f605c5..a4acfe9 100644
+--- a/services/transfers/src/params.ts
++++ b/services/transfers/src/params.ts
+@@ -32,7 +32,6 @@ function collect(input: RawParams): Result<Record<string, string>> {
+       if (pair === '') continue;
+       const eq = pair.indexOf('=');
+       const key = decode(eq === -1 ? pair : pair.slice(0, eq));
+-      if (key in out) return bad(`duplicate parameter "${key}"`);
+       out[key] = eq === -1 ? '' : decode(pair.slice(eq + 1));
+     }
+     return ok(out);
+@@ -40,8 +39,7 @@ function collect(input: RawParams): Result<Record<string, string>> {
+   for (const [key, value] of Object.entries(input)) {
+     if (value === undefined) continue;
+     if (Array.isArray(value)) {
+-      if (value.length !== 1) return bad(`duplicate parameter "${key}"`);
+-      out[key] = value[0]!;
++      out[key] = value.at(-1) ?? '';
+     } else out[key] = value;
+   }
+   return ok(out);
+-- 
+2.50.1 (Apple Git-155)
+

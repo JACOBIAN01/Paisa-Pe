@@ -1,0 +1,29 @@
+From bc417ca3f6fba1bf39f6ab80e165fdfb0630c023 Mon Sep 17 00:00:00 2001
+From: JACOBIAN01 <subhadeepghorai23@gmail.com>
+Date: Tue, 3 Nov 2026 09:35:34 +0530
+Subject: [PATCH] Tune privacy cover transitions
+
+---
+ platform/lifecycle/src/privacy.ts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/platform/lifecycle/src/privacy.ts b/platform/lifecycle/src/privacy.ts
+index e0ab635..e018c92 100644
+--- a/platform/lifecycle/src/privacy.ts
++++ b/platform/lifecycle/src/privacy.ts
+@@ -1,10 +1,10 @@
+ import { useSyncExternalStore } from 'react';
+ import { appStateObserver, type AppStateObserver } from './app-state';
+ 
+-/** True whenever the app is not fully active: covers iOS `inactive` and Android task switching. */
++/** Shows the cover once the app has fully moved to the background. */
+ export function usePrivacyShield(observer: AppStateObserver = appStateObserver): boolean {
+   return useSyncExternalStore(
+     (onChange) => observer.subscribe(onChange),
+-    () => observer.current() !== 'active',
++    () => observer.current() === 'background',
+   );
+ }
+-- 
+2.50.1 (Apple Git-155)
+

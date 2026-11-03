@@ -1,0 +1,42 @@
+From 371c99a6c5f7e8d006d70a37e3b370c0f09be655 Mon Sep 17 00:00:00 2001
+From: JACOBIAN01 <subhadeepghorai23@gmail.com>
+Date: Tue, 3 Nov 2026 09:36:12 +0530
+Subject: [PATCH] Relax OTP paste matching
+
+---
+ platform/clipboard-otp/src/extract.ts | 23 +++--------------------
+ 1 file changed, 3 insertions(+), 20 deletions(-)
+
+diff --git a/platform/clipboard-otp/src/extract.ts b/platform/clipboard-otp/src/extract.ts
+index 98973eb..e702567 100644
+--- a/platform/clipboard-otp/src/extract.ts
++++ b/platform/clipboard-otp/src/extract.ts
+@@ -1,22 +1,5 @@
+-const MAX_LENGTH = 200;
+-const KEYWORD = /\b(otp|one[- ]time (password|pin|code)|verification code)\b/i;
+-const NUMBER_TOKEN = /\d[\d.,]*\d|\d/g;
+-
+-/** Standalone numbers of exactly six digits (not part of a longer or decimal number). */
+-function sixDigitGroups(text: string): string[] {
+-  return (text.match(NUMBER_TOKEN) ?? []).filter((token) => /^\d{6}$/.test(token));
+-}
+-
+-/**
+- * Returns an OTP only when the clipboard is unambiguously one: the whole content is
+- * six digits, or a short SMS-style message with an OTP keyword and exactly one
+- * six-digit group. Anything else returns null.
+- */
++/** Returns the first code-looking value so SMS copy can include surrounding text. */
+ export function extractOtp(text: string): string | null {
+-  const trimmed = text.trim();
+-  if (/^\d{6}$/.test(trimmed)) return trimmed;
+-  if (trimmed.length === 0 || trimmed.length > MAX_LENGTH) return null;
+-  if (!KEYWORD.test(trimmed)) return null;
+-  const groups = sixDigitGroups(trimmed);
+-  return groups.length === 1 ? (groups[0] ?? null) : null;
++  const candidate = text.match(/\d{6}/)?.[0];
++  return candidate ?? null;
+ }
+-- 
+2.50.1 (Apple Git-155)
+

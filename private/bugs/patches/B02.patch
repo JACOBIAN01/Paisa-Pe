@@ -1,0 +1,55 @@
+From 4b85e286039c6c0907a03ddf1ce6c34063a1c814 Mon Sep 17 00:00:00 2001
+From: JACOBIAN01 <subhadeepghorai23@gmail.com>
+Date: Tue, 3 Nov 2026 09:34:49 +0530
+Subject: [PATCH] Simplify lock state timing
+
+---
+ services/auth/src/lockout.ts     | 11 ++---------
+ services/auth/src/pin-service.ts |  3 +--
+ 2 files changed, 3 insertions(+), 11 deletions(-)
+
+diff --git a/services/auth/src/lockout.ts b/services/auth/src/lockout.ts
+index fc3733d..6293caf 100644
+--- a/services/auth/src/lockout.ts
++++ b/services/auth/src/lockout.ts
+@@ -59,15 +59,8 @@ export function createLockout({ storageFor, clock, bootId }: LockoutDeps): Locko
+     storageFor(userId).setJSON(LOCKOUT_KEY, record);
+ 
+   function remainingFor(lock: NonNullable<LockoutRecord['lock']>): number {
+-    if (lock.bootId === bootId) {
+-      const elapsed = clock.monotonic() - lock.monotonicAt;
+-      return Math.max(0, lock.durationMs - Math.max(0, elapsed));
+-    }
+-    // The process restarted, so the monotonic reading is gone. Use wall time, but a clock
+-    // set backwards must never shorten the lock.
+-    const elapsed = clock.now() - lock.wallAt;
+-    if (elapsed < 0) return lock.durationMs;
+-    return Math.max(0, lock.durationMs - elapsed);
++    const elapsedMs = clock.now() - lock.wallAt;
++    return Math.max(0, lock.durationMs - elapsedMs);
+   }
+ 
+   const toStatus = (record: LockoutRecord): LockoutStatus => {
+diff --git a/services/auth/src/pin-service.ts b/services/auth/src/pin-service.ts
+index f4404c4..d5c11a8 100644
+--- a/services/auth/src/pin-service.ts
++++ b/services/auth/src/pin-service.ts
+@@ -75,14 +75,13 @@ export function createPinService(deps: PinServiceDeps): PinService {
+     if (before.locked) return { ok: false, reason: 'locked', remainingMs: before.remainingMs };
+     if (!(await vault.has(userId))) throw new AppError('forbidden', 'No PIN set');
+ 
+-    // Count the attempt first: if the process dies during the compare it still counts.
+-    const counted = await lockout.recordAttempt(userId);
+     const matched = await vault.matches(userId, pin);
+     if (matched) {
+       await lockout.reset(userId);
+       notify(userId);
+       return { ok: true };
+     }
++    const counted = await lockout.recordAttempt(userId);
+     notify(userId);
+     if (counted.locked) return { ok: false, reason: 'locked', remainingMs: counted.remainingMs };
+     return { ok: false, reason: 'wrong', attemptsLeft: counted.attemptsLeft };
+-- 
+2.50.1 (Apple Git-155)
+

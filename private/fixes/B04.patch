@@ -1,0 +1,46 @@
+diff --git a/core/analytics/src/analytics.ts b/core/analytics/src/analytics.ts
+index c0d5609..37b611e 100644
+--- a/core/analytics/src/analytics.ts
++++ b/core/analytics/src/analytics.ts
+@@ -36,14 +36,12 @@ export interface AnalyticsOptions {
+ 
+ type Primitive = string | number | boolean;
+ 
+-/** Normalises values before passing them to a permissive third-party sink. */
++/** Drops anything that is not a primitive so objects can never leak into a sink. */
+ function sanitise(props: object): Record<string, Primitive> {
+   const out: Record<string, Primitive> = {};
+   for (const [key, value] of Object.entries(props)) {
+     if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
+       out[key] = value;
+-    } else if (value !== null && typeof value === 'object') {
+-      out[key] = JSON.stringify(value);
+     }
+   }
+   return out;
+diff --git a/services/transfers/src/service.ts b/services/transfers/src/service.ts
+index eb7dc21..13bb6de 100644
+--- a/services/transfers/src/service.ts
++++ b/services/transfers/src/service.ts
+@@ -2,7 +2,6 @@ import type { AppEventMap } from '@pp/contracts-events';
+ import type { EventBus } from '@pp/core-event-bus';
+ import { createIdempotencyKey, DEFAULT_RETRY, backoffDelay } from '@pp/core-net';
+ import type { HttpClient, RetryPolicy } from '@pp/core-net';
+-import { amountBucket, appAnalytics } from '@pp/core-analytics';
+ import { AbortedError, AppError, toAppError } from '@pp/core-result';
+ import type { JsonStore } from '@pp/core-storage';
+ import { every, type Cancel, type Clock } from '@pp/core-time';
+@@ -110,13 +109,6 @@ export function createTransferService(deps: TransferServiceDeps): TransferServic
+       await queue.remove(id);
+       ledger.recordTxn(response.txn);
+       ledger.settleDebit(id, response.balance);
+-      const analyticsPayload = {
+-        ...response.txn,
+-        amountBucket: amountBucket(response.txn.amount),
+-        type: response.txn.type,
+-        status: response.txn.status,
+-      };
+-      appAnalytics.track('payment_sent', analyticsPayload);
+       bus.emit('payment.sent', { txn: response.txn });
+       return { status: 'sent', txn: response.txn };
+     } catch (thrown) {

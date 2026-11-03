@@ -42,8 +42,16 @@ Read this first when resuming in a new session.
 
 ## Next
 
-Phase 5: create the bug manifest and the 30 isolated, reversible patch commits from the `v-clean`
-baseline. Do not modify the clean baseline except for a real defect that is outside the catalogue.
+### Phase 5: Bug injection as patches (in progress)
+
+- Added the instructor-only manifest, with all B01–B30 tiers, package ownership, conflicts and
+  the B19/B30 chain relationship.
+- Added the `pnpm inject` command. Its deterministic selection, quota, conflict and apply/revert
+  behavior remains covered by the injector tests.
+- Authored and individually apply/revert-validated B01–B14. The remaining B15–B30 patches,
+  whole-cohort checks and all-bug happy-path verification are still outstanding.
+
+Do not modify the `v-clean` baseline except for a real defect that is outside the catalogue.
 
 ## Decisions and deviations
 

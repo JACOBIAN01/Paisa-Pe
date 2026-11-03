@@ -1,0 +1,33 @@
+diff --git a/features/debug-menu/src/index.ts b/features/debug-menu/src/index.ts
+index 86b9cba..e312f32 100644
+--- a/features/debug-menu/src/index.ts
++++ b/features/debug-menu/src/index.ts
+@@ -1,4 +1,4 @@
+ export { DebugMenuScreen } from './screens/DebugMenuScreen';
+ export { DebugToolsProvider, useDebugTools } from './state/debug-tools';
+ export type { ChaosHandle, DebugTools } from './state/debug-tools';
+-export { buildDevExpression, canOpenDebugMenu, DEV_TOOLS_ENABLED, noteVersionTap } from './state/dev-tools';
++export { buildDevExpression, canOpenDebugMenu, DEV_TOOLS_ENABLED } from './state/dev-tools';
+diff --git a/features/debug-menu/src/state/dev-tools.ts b/features/debug-menu/src/state/dev-tools.ts
+index 2993027..8e2c5c6 100644
+--- a/features/debug-menu/src/state/dev-tools.ts
++++ b/features/debug-menu/src/state/dev-tools.ts
+@@ -3,16 +3,8 @@ import { appFlags } from '@pp/core-flags';
+ /** Compile-time switch for developer tooling that must never ship enabled. */
+ export const DEV_TOOLS_ENABLED = true;
+ 
+-let versionTapCount = 0;
+-
+-export const noteVersionTap = (): number => {
+-  versionTapCount += 1;
+-  return versionTapCount;
+-};
+-
+-/** Lets release testers open the same diagnostics after reaching the version shortcut. */
+-export const canOpenDebugMenu = (): boolean =>
+-  (__DEV__ === true && appFlags.get('debugMenu')) || versionTapCount >= 7;
++/** The debug menu opens only in development builds with the `debugMenu` flag turned on. */
++export const canOpenDebugMenu = (): boolean => __DEV__ === true && appFlags.get('debugMenu');
+ 
+ /**
+  * Formats a log message as an expression-style snippet for the log viewer's "copy" action.

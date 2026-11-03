@@ -1,22 +1,47 @@
-# PaisaPe — Student Bug Bounty
+# PaisaPe — Progressive Student Bug Bounty
 
-Find **25 intentional bugs** in this local demo wallet. The challenge is about JavaScript, React, React Native and Expo fundamentals—not real financial infrastructure.
+PaisaPe is a local mock-wallet app. The challenge contains **25 intentional bugs** across three progressive levels. Your goal is to restore the app feature by feature—not just collect isolated findings.
 
-## Challenge levels
+## How progression works
 
-- **Easy — 8 findings:** input handling, formatting and visible UI behaviour.
-- **Medium — 10 findings:** component state, list rendering, hooks, effects, accessibility and navigation lifecycle.
-- **Hard — 7 findings:** race conditions, repeated actions, route parameters and edge cases.
+### Level 1 — Easy: Unlock core features
 
-The levels describe investigation effort, not financial severity.
+Find and fix 10 independent issues. Each one restores a core behaviour in one feature area:
+
+1. Wallet home
+2. Add money
+3. Send money
+4. Money requests
+5. Activity
+6. Virtual cards
+7. Budgets
+8. Savings goals
+9. Bill payments
+10. Beneficiaries
+
+Treat each feature as a small milestone. Verify that feature works before moving to the next level.
+
+### Level 2 — Medium: Complete feature workflows
+
+Find 10 issues that affect deeper interactions inside the feature areas. These may involve state, filtering, validation, navigation, lists or edge cases. The objective is to make each workflow behave consistently from start to finish.
+
+### Level 3 — Hard: Complete the application
+
+Find 5 issues that cross feature boundaries. Investigate how shared state and user actions affect the wallet balance, activity history and other screens. A fix should preserve consistency across the app.
+
+The levels describe investigation effort, not financial severity. Each report should identify one root cause. Do not combine unrelated symptoms into one finding.
 
 ## Learning scope
 
-**React:** state updates, stale closures, Context, hooks, memoization, effects and cleanup.
+**JavaScript:** values, arrays, objects, functions, map, filter, reduce and basic validation.
 
-**React Native:** TextInput, Pressable, Switch, FlatList, accessibility and rendering behaviour.
+**React:** components, props, state, Context, hooks, memoization and effects.
 
-**Expo:** Expo Router, deep links, notifications, device APIs and app lifecycle.
+**React Native:** View, Text, Pressable, TextInput, FlatList, Switch, StyleSheet and accessibility.
+
+**Expo:** Expo Router navigation and basic app lifecycle behaviour.
+
+Stay within beginner-friendly JavaScript, React and React Native concepts. TypeScript, Redux, backend services, databases and real payment integrations are outside the challenge scope.
 
 ## Rules
 
@@ -25,12 +50,14 @@ The levels describe investigation effort, not financial severity.
 3. Do not modify the app to make a finding disappear.
 4. Submit one root cause per report.
 5. Include exact reproduction steps, expected result, actual result, impact, affected file and suggested fix.
-6. Do not publish or share instructor-only materials.
+6. Verify a fix on the affected screen and check that it does not break an earlier feature.
+7. Do not publish or share instructor-only materials.
 
 ## Report format
 
 - Title:
 - Level: Easy / Medium / Hard
+- Feature area:
 - Affected screen/file:
 - Preconditions:
 - Steps to reproduce:

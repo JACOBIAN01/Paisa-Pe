@@ -20,6 +20,7 @@ export default function HomeScreen(){
   <View style={styles.shortcuts}>{shortcuts.map(item=><Link key={item.label} href={item.href} asChild><Pressable style={styles.shortcut}>
    <View style={styles.shortcutIcon}><Ionicons name={item.icon} size={23} color="#5B5CE2"/></View><Text style={styles.shortcutText}>{item.label}</Text>
   </Pressable></Link>)}</View>
+  <Link href="/features" asChild><Pressable><PrimaryButton label="Explore more features"/></Pressable></Link>
   <SectionTitle title="Recent activity" action="See all" href="/activity"/>
   <Card style={styles.listCard}>{recent.length?recent.map(item=><TransactionRow key={item.id} item={item}/>):<Text style={styles.empty}>No activity yet</Text>}</Card>
   <Link href="/send" asChild><Pressable><PrimaryButton label="Send money"/></Pressable></Link>

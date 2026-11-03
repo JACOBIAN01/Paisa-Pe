@@ -1,0 +1,3 @@
+import {StyleSheet,Text,TextInput,View} from 'react-native';
+export function FormField({label,value,onChangeText,placeholder,keyboardType='default',multiline=false}){return <View style={s.field}><Text style={s.label}>{label}</Text><TextInput value={value} onChangeText={onChangeText} placeholder={placeholder} keyboardType={keyboardType} multiline={multiline} style={[s.input,multiline&&s.multiline]}/></View>;}
+const s=StyleSheet.create({field:{gap:8},label:{fontSize:12,fontWeight:'800',color:'#55556B'},input:{minHeight:50,borderRadius:13,borderWidth:1,borderColor:'#E8E8F0',backgroundColor:'#FFFFFF',paddingHorizontal:14,color:'#303047'},multiline:{minHeight:100,paddingTop:12,textAlignVertical:'top'}});

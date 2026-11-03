@@ -1,0 +1,9 @@
+import {useState} from 'react';
+import {Alert,ScrollView,StyleSheet,Text} from 'react-native';
+import {router} from 'expo-router';
+import {Screen,PrimaryButton} from '../src/components/UI';
+import {ScreenHeader} from '../src/components/ScreenHeader';
+import {FormField} from '../src/components/FormField';
+import {useFeatures} from '../src/context/FeatureContext';
+export default function NewTicketScreen(){const {addTicket}=useFeatures();const [subject,setSubject]=useState('');const [category,setCategory]=useState('General');const [message,setMessage]=useState('');function submit(){if(!subject.trim()||!message.trim())return Alert.alert('Add more details','Enter a subject and describe the issue.');addTicket({subject:subject.trim(),category,message:message.trim()});Alert.alert('Ticket created','Your sample ticket has been added.',[{text:'Done',onPress:()=>router.back()}]);}return <Screen><ScreenHeader title="New support ticket" subtitle="Describe what happened"/><ScrollView contentContainerStyle={s.content}><FormField label="Subject" value={subject} onChangeText={setSubject} placeholder="What do you need help with?"/><FormField label="Category" value={category} onChangeText={setCategory} placeholder="General, Cards, Payments..."/><FormField label="Message" value={message} onChangeText={setMessage} placeholder="Add a few details..." multiline/><Text style={s.note}>This ticket is stored locally for demonstration only.</Text><PrimaryButton label="Submit ticket" onPress={submit}/></ScrollView></Screen>;}
+const s=StyleSheet.create({content:{padding:20,paddingTop:4,gap:17},note:{color:'#85869A',fontSize:11,lineHeight:16}});

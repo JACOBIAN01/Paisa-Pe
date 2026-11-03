@@ -1,0 +1,4 @@
+import {Pressable,StyleSheet,Text,View} from 'react-native';
+import {Ionicons} from '@expo/vector-icons';
+export function ActionRow({title,subtitle,icon,onPress,trailing}){return <Pressable onPress={onPress} style={({pressed})=>[s.row,pressed&&s.pressed]}><View style={s.icon}><Ionicons name={icon||'ellipse-outline'} size={20} color="#5B5CE2"/></View><View style={s.copy}><Text style={s.title}>{title}</Text>{subtitle?<Text style={s.subtitle}>{subtitle}</Text>:null}</View>{trailing||<Ionicons name="chevron-forward" size={17} color="#A1A1B2"/>}</Pressable>;}
+const s=StyleSheet.create({row:{flexDirection:'row',alignItems:'center',paddingVertical:13,gap:12,borderBottomWidth:1,borderBottomColor:'#F0F0F4'},icon:{width:40,height:40,borderRadius:13,backgroundColor:'#F0F0FF',alignItems:'center',justifyContent:'center'},copy:{flex:1,gap:4},title:{color:'#303047',fontWeight:'700',fontSize:13},subtitle:{color:'#85869A',fontSize:11},pressed:{opacity:0.7}});

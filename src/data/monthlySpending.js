@@ -1,0 +1,2 @@
+export const monthlySpending=[{month:'Jun',amount:7200},{month:'Jul',amount:9100},{month:'Aug',amount:6800},{month:'Sep',amount:10400},{month:'Oct',amount:8650},{month:'Nov',amount:7420}];
+export const categorySpending=[{label:'Food & Dining',amount:3850,color:'#F59E0B'},{label:'Shopping',amount:4200,color:'#8B5CF6'},{label:'Transport',amount:1120,color:'#3B82F6'},{label:'Entertainment',amount:650,color:'#10B981'},{label:'Other',amount:900,color:'#EC4899'}];

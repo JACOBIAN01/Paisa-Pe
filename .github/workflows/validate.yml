@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - bug-bounty/25-seed-refresh
+      - feature/basic-react-native-expansion
   workflow_dispatch:
 
 permissions:

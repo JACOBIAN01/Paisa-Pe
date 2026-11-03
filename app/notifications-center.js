@@ -1,0 +1,7 @@
+import {useState} from 'react';
+import {ScrollView,StyleSheet,Text,View} from 'react-native';
+import {Screen} from '../src/components/UI';
+import {ScreenHeader} from '../src/components/ScreenHeader';
+import {sampleNotifications} from '../src/data/notifications';
+export default function NotificationsCenterScreen(){const [items,setItems]=useState(sampleNotifications);function markRead(id){setItems(current=>current.map(item=>item.id===id?{...item,read:true}:item));}return <Screen><ScreenHeader title="Notification history" subtitle="Updates from your wallet"/><ScrollView contentContainerStyle={s.content}>{items.map(item=><View key={item.id} style={[s.card,!item.read&&s.unread]}><View style={s.top}><Text style={s.title}>{item.title}</Text><Text style={s.time}>{item.time}</Text></View><Text style={s.message}>{item.message}</Text>{!item.read?<Text onPress={()=>markRead(item.id)} style={s.action}>Mark as read</Text>:<Text style={s.read}>Read</Text>}</View>)}</ScrollView></Screen>;}
+const s=StyleSheet.create({content:{padding:20,paddingTop:4,gap:12},card:{padding:16,borderRadius:15,backgroundColor:'#FFFFFF',borderWidth:1,borderColor:'#EEEEF4',gap:8},unread:{borderColor:'#BDBDFF',backgroundColor:'#FAFAFF'},top:{flexDirection:'row',justifyContent:'space-between',gap:8},title:{fontWeight:'800',fontSize:13,color:'#303047',flex:1},time:{fontSize:10,color:'#85869A'},message:{fontSize:12,color:'#77778C',lineHeight:18},action:{fontSize:11,color:'#5B5CE2',fontWeight:'800'},read:{fontSize:10,color:'#A1A1B2'}});

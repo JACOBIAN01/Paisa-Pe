@@ -6,7 +6,7 @@ import { useWallet } from '../src/context/WalletContext';
 export default function AddMoneyScreen(){
  const [amount,setAmount]=useState(''); const {addMoney}=useWallet();
  function submit(){
-  const result=addMoney(Number(amount));
+  const result=addMoney(Number.parseInt(amount,10));
   if(!result.ok) return Alert.alert('Invalid amount',result.message);
   Alert.alert('Money added','Your wallet balance has been updated.',[{text:'Done',onPress:()=>router.replace('/(tabs)/home')}]);
  }

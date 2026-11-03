@@ -3,7 +3,7 @@ import { Link } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Screen,Card } from '../../src/components/UI';
 import { useWallet } from '../../src/context/WalletContext';
-const options=[{label:'Personal information',icon:'person-outline',href:'/personal-info'},{label:'Money requests',icon:'cash-outline',href:'/requests'},{label:'Notifications',icon:'notifications-outline',href:'/notifications'},{label:'Device information',icon:'phone-portrait-outline',href:'/device-info'},{label:'App settings',icon:'settings-outline',href:'/settings'}];
+const options=[{label:'Explore features',icon:'grid-outline',href:'/features'},{label:'Personal information',icon:'person-outline',href:'/personal-info'},{label:'Money requests',icon:'cash-outline',href:'/requests'},{label:'Notifications',icon:'notifications-outline',href:'/notifications'},{label:'Device information',icon:'phone-portrait-outline',href:'/device-info'},{label:'App settings',icon:'settings-outline',href:'/settings'}];
 export default function ProfileScreen(){
  const {profile}=useWallet();
  return <Screen><ScrollView contentContainerStyle={styles.content}><Text style={styles.title}>Profile</Text>

@@ -37,7 +37,7 @@ export default function CardsScreen() {
                 <Text style={styles.switchTitle}>Freeze card</Text>
                 <Text style={styles.detail}>Temporarily pause card payments</Text>
               </View>
-              <Switch value={card.frozen} onValueChange={() => toggleCard(card.id)} />
+              <Switch value={!card.frozen} onValueChange={() => toggleCard(card.id)} />
             </View>
           </Card>
         ))}

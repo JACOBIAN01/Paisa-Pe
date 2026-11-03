@@ -27,9 +27,25 @@ function write(rel: string, content: string, overwrite: boolean): boolean {
   return true;
 }
 
+/** Keeps hand-maintained fields (dependencies, main, extra scripts) when regenerating. */
+function mergePackageJson(dir: string, generated: string): string {
+  const file = join(ROOT, dir, 'package.json');
+  if (!existsSync(file)) return generated;
+  const existing = JSON.parse(readFileSync(file, 'utf8'));
+  const next = JSON.parse(generated);
+  const merged = {
+    ...next,
+    main: existing.main ?? next.main,
+    scripts: { ...next.scripts, ...existing.scripts },
+    ...(existing.dependencies ? { dependencies: existing.dependencies } : {}),
+    ...(existing.devDependencies ? { devDependencies: existing.devDependencies } : {}),
+  };
+  return `${JSON.stringify(merged, null, 2)}\n`;
+}
+
 function scaffold(spec: PackageSpec, force: boolean): void {
   const dir = packagePath(spec);
-  write(`${dir}/package.json`, renderPackageJson(spec), true);
+  write(`${dir}/package.json`, mergePackageJson(dir, renderPackageJson(spec)), true);
   write(`${dir}/tsconfig.json`, renderTsconfig(spec), true);
   write(`${dir}/README.md`, renderReadme(spec), force);
   write(`${dir}/CLAUDE.md`, renderClaudeMd(spec), force);

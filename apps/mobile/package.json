@@ -3,10 +3,12 @@
   "version": "0.0.0",
   "private": true,
   "description": "Expo Router application shell.",
-  "main": "src/index.ts",
+  "main": "expo-router/entry",
   "types": "src/index.ts",
   "scripts": {
-    "typecheck": "tsc --noEmit -p tsconfig.json"
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "start": "expo start",
+    "export:ios": "expo export --platform ios"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "2.2.0",

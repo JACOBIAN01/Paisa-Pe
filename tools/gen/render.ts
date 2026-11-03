@@ -56,7 +56,11 @@ export function renderPackageJson(s: PackageSpec): string {
 
 export function renderTsconfig(s: PackageSpec): string {
   const depth = packagePath(s).split('/').length;
-  const include = FLAT_SOURCE_LAYERS.includes(s.layer) ? ['.'] : ['src'];
+  const include = FLAT_SOURCE_LAYERS.includes(s.layer)
+    ? ['.']
+    : s.layer === 'apps'
+      ? ['src', 'app']
+      : ['src'];
   return json({
     extends: `${'../'.repeat(depth)}tsconfig.base.json`,
     include,

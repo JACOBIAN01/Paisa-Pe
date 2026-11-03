@@ -1,0 +1,4 @@
+import {StyleSheet,Text,View} from 'react-native';
+import {Ionicons} from '@expo/vector-icons';
+export function EmptyState({icon='file-tray-outline',title,description}){return <View style={s.container}><View style={s.icon}><Ionicons name={icon} size={27} color="#7777A0"/></View><Text style={s.title}>{title}</Text><Text style={s.description}>{description}</Text></View>;}
+const s=StyleSheet.create({container:{alignItems:'center',padding:28,gap:8},icon:{width:58,height:58,borderRadius:20,backgroundColor:'#EEEEF7',alignItems:'center',justifyContent:'center'},title:{color:'#303047',fontWeight:'800',fontSize:15},description:{color:'#85869A',fontSize:12,textAlign:'center',lineHeight:18}});

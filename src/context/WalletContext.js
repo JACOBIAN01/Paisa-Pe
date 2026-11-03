@@ -20,6 +20,7 @@ export function WalletProvider({children}){
   if(!Number.isFinite(amount)||amount<=0) return {ok:false,message:'Enter a valid amount.'};
   if(amount>balance) return {ok:false,message:'Insufficient balance.'};
   setBalance(current=>current-amount);
+  // The note is intentionally not included in the saved transaction.
   addTransaction(recipient,-amount,'debit');
   return {ok:true};
  }

@@ -1,0 +1,68 @@
+name: Validate PaisaPe
+
+on:
+  push:
+    branches:
+      - bug-bounty/25-seed-refresh
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  install-doctor-and-export:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout challenge branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Resolve Expo SDK peer dependencies and generate lockfile
+        shell: bash
+        run: |
+          npm install --package-lock-only --ignore-scripts
+          npm ci
+          npx expo install expo-font expo-linking
+          npm install --save-dev babel-preset-expo@~54.0.12
+          npm install --package-lock-only --ignore-scripts
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package.json package-lock.json
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: add lockfile and Expo peer dependencies"
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi
+
+      - name: Install exactly from lockfile
+        run: npm ci
+
+      - name: Check Expo dependencies and configuration
+        run: npx expo-doctor
+
+      - name: Export iOS JavaScript bundle
+        run: npx expo export --platform ios
+
+      - name: Export Android JavaScript bundle
+        run: npx expo export --platform android
+
+      - name: Verify Metro development server startup
+        shell: bash
+        run: |
+          npx expo start --non-interactive --port 8081 > /tmp/paisape-metro.log 2>&1 &
+          PID=$!
+          trap 'kill "$PID" 2>/dev/null || true' EXIT
+          for attempt in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:8081/status >/dev/null; then
+              echo "Metro development server is ready."
+              exit 0
+            fi
+            sleep 2
+          done
+          cat /tmp/paisape-metro.log
+          exit 1

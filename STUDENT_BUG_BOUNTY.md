@@ -1,25 +1,36 @@
-# Student Bug Bounty Guide
+# PaisaPe — Student Bug Bounty
 
-Find 20–25 intentional bugs in PaisaPe. The defects focus on React, React Native and Expo fundamentals—not real financial infrastructure.
+Find **25 intentional bugs** in this local demo wallet. The challenge is about JavaScript, React, React Native and Expo fundamentals—not real financial infrastructure.
 
-## Scope
+## Challenge levels
 
-**React basics:** state updates, stale closures, effects and cleanup, dependency arrays, props, Context, list keys, conditional rendering and controlled inputs.
+- **Easy — 8 findings:** input handling, formatting and visible UI behaviour.
+- **Medium — 10 findings:** component state, list rendering, hooks, effects, accessibility and navigation lifecycle.
+- **Hard — 7 findings:** race conditions, repeated actions, route parameters and edge cases.
 
-**React Native basics:** core components, FlatList, TextInput, Pressable, Switch, ScrollView, keyboard behaviour, styling, platform differences and accessibility.
+The levels describe investigation effort, not financial severity.
 
-**Expo basics:** Expo Router navigation, app configuration, device APIs, notifications and platform capabilities.
+## Learning scope
 
-## Levels
+**React:** state updates, stale closures, Context, hooks, memoization, effects and cleanup.
 
-- **Easy:** visible UI or input issue; usually reproducible in a few steps.
-- **Medium:** state, navigation, list rendering, hooks or platform lifecycle issue.
-- **Hard:** race condition, stale state across screens, lifecycle cleanup or edge case requiring careful reproduction.
+**React Native:** TextInput, Pressable, Switch, FlatList, accessibility and rendering behaviour.
+
+**Expo:** Expo Router, deep links, notifications, device APIs and app lifecycle.
+
+## Rules
+
+1. Report bugs in this repository only.
+2. Do not attack real payment systems, external services, accounts, devices or networks.
+3. Do not modify the app to make a finding disappear.
+4. Submit one root cause per report.
+5. Include exact reproduction steps, expected result, actual result, impact, affected file and suggested fix.
+6. Do not publish or share instructor-only materials.
 
 ## Report format
 
 - Title:
-- Severity: Easy / Medium / Hard
+- Level: Easy / Medium / Hard
 - Affected screen/file:
 - Preconditions:
 - Steps to reproduce:
@@ -28,10 +39,15 @@ Find 20–25 intentional bugs in PaisaPe. The defects focus on React, React Nati
 - Why this matters:
 - Suggested fix:
 
-A good report must be repeatable and specific. One report should describe one root cause.
+## Setup
 
-## Safety
+Requirements: Node.js 20+ and npm.
 
-This is a local mock wallet. Do not connect real bank accounts, use real credentials, intercept traffic, scan external infrastructure or attempt to affect another person's device or data. Do not add real payment integrations.
+```bash
+npm ci
+npx expo start
+```
 
-Run with npm install and npx expo start. Start at Home. Explore unusual inputs, rapid taps, navigating away and back, empty lists, long text and switching screens.
+Open the app in Expo Go or a development build. Press `i` for iOS Simulator or `a` for Android Emulator.
+
+All wallet operations use local mock data. No real money, payment credentials or bank integrations are involved. Data resets when the app restarts.

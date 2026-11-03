@@ -15,6 +15,7 @@ test fails on the buggy copy and passes after the suggested correction.
 ### B01 — PIN stored in normal storage
 
 - **What is wrong:** The PIN verifier is saved in ordinary app storage instead of protected storage.
+- **Why this is a bug:** A PIN is a secret, so it must not be stored where ordinary app data can be read.
 - **Where to look:** `services/auth/src/pin-vault.ts` and `services/auth/src/pin-service.ts`.
 - **Why it matters:** Another app, a device backup, or a compromised device may read it.
 - **Fix:** Store only a salted, slow hash in the secure-storage adapter. Never keep the raw PIN or
@@ -23,6 +24,7 @@ test fails on the buggy copy and passes after the suggested correction.
 ### B02 — Lockout based on device time
 
 - **What is wrong:** Failed-PIN lockout trusts the phone clock and updates the attempt count too late.
+- **Why this is a bug:** A user must not be able to weaken a security lock simply by changing the phone time.
 - **Where to look:** `services/auth/src/lockout.ts` and `services/auth/src/pin-service.ts`.
 - **Why it matters:** Changing the device clock can shorten a lockout; parallel attempts can also
   escape the intended limit.
@@ -32,6 +34,7 @@ test fails on the buggy copy and passes after the suggested correction.
 ### B03 — Refresh token saved in normal storage
 
 - **What is wrong:** A session refresh token is persisted in normal storage.
+- **Why this is a bug:** A refresh token can keep a user signed in, so stealing it is almost like stealing a password.
 - **Where to look:** `services/auth/src/session-store.ts` and `services/auth/src/auth-service.ts`.
 - **Why it matters:** Anyone who obtains that token can restore the session.
 - **Fix:** Persist refresh credentials only through the secure-storage adapter, and remove them on
@@ -40,6 +43,7 @@ test fails on the buggy copy and passes after the suggested correction.
 ### B04 — Personal details sent to analytics
 
 - **What is wrong:** The analytics event includes the entire transfer object.
+- **Why this is a bug:** Analytics should help measure the app, not collect a user's private payment details.
 - **Where to look:** `core/analytics/src/analytics.ts` and `services/transfers/src/service.ts`.
 - **Why it matters:** Phone numbers, notes, and transaction details can leave the app in telemetry.
 - **Fix:** Send a small allow-list of non-sensitive fields, such as outcome and amount band. Redact
@@ -48,6 +52,7 @@ test fails on the buggy copy and passes after the suggested correction.
 ### B05 — Sensitive screen visible in the app switcher
 
 - **What is wrong:** The privacy cover reacts only to `background` and misses other lifecycle states.
+- **Why this is a bug:** The app must hide private information before the operating system takes its preview image.
 - **Where to look:** `platform/lifecycle/src/privacy.ts`.
 - **Why it matters:** Balance and transaction details can appear in the operating system's recent-app
   preview.
@@ -57,6 +62,7 @@ test fails on the buggy copy and passes after the suggested correction.
 ### B06 — Help web page can send trusted commands
 
 - **What is wrong:** The WebView message handler accepts navigation commands from any page.
+- **Why this is a bug:** Content from an untrusted web page must not be allowed to control the wallet app.
 - **Where to look:** `platform/webview-bridge/src/handler.ts`.
 - **Why it matters:** Untrusted help content can try to open payment-related screens.
 - **Fix:** Check the message origin against a strict allow-list, validate the message shape, and
@@ -65,6 +71,7 @@ test fails on the buggy copy and passes after the suggested correction.
 ### B07 — Clipboard OTP picks an unrelated number
 
 - **What is wrong:** OTP autofill takes the first six-digit value found on the clipboard.
+- **Why this is a bug:** A random copied number is not proof that it is the correct one-time password.
 - **Where to look:** `platform/clipboard-otp/src/extract.ts`.
 - **Why it matters:** It can submit a code copied from a different message or application.
 - **Fix:** Require a clear OTP format and relevant context, present the candidate to the user, and
@@ -73,6 +80,7 @@ test fails on the buggy copy and passes after the suggested correction.
 ### B08 — Debug menu reachable in a release build
 
 - **What is wrong:** Repeated taps make the debug menu available even outside development.
+- **Why this is a bug:** Debug controls are for developers and should never be unlocked by normal users in release builds.
 - **Where to look:** `features/debug-menu/src/index.ts` and
   `features/debug-menu/src/state/dev-tools.ts`.
 - **Why it matters:** A user can change flags or inspect internal state in a production app.
@@ -85,6 +93,7 @@ test fails on the buggy copy and passes after the suggested correction.
 
 - **What is wrong:** The confirmation display reads one `amount` parameter while payment code reads
   another.
+- **Why this is a bug:** The amount a user sees and approves must be exactly the amount the app sends.
 - **Where to look:** `platform/deeplink/src/parse.ts` and `services/transfers/src/params.ts`.
 - **Why it matters:** A link can display a small amount but submit a larger amount.
 - **Fix:** Parse once into a typed request, reject duplicate security-sensitive parameters, and pass
@@ -93,6 +102,7 @@ test fails on the buggy copy and passes after the suggested correction.
 ### B10 — Deep-link listeners accumulate
 
 - **What is wrong:** A deep-link event listener is added but not removed when the screen/hook ends.
+- **Why this is a bug:** One user action should create one payment flow, not several hidden copies of it.
 - **Where to look:** `platform/deeplink/src/use-deep-links.ts` and
   `features/send-money/src/hooks/useTransferParams.ts`.
 - **Why it matters:** One link can start multiple payment flows after navigating around the app.
@@ -102,6 +112,7 @@ test fails on the buggy copy and passes after the suggested correction.
 ### B11 — Cold-start link bypasses the lock gate
 
 - **What is wrong:** The initial URL is routed before lock state and session state are ready.
+- **Why this is a bug:** A link must not bypass the same lock checks that protect normal navigation.
 - **Where to look:** `apps/mobile/src/runtime/start-platform.ts` and
   `platform/deeplink/src/router.ts`.
 - **Why it matters:** A locked user can be sent into a sensitive payment screen.
@@ -112,6 +123,7 @@ test fails on the buggy copy and passes after the suggested correction.
 ### B12 — Displayed amount and charged amount differ
 
 - **What is wrong:** The input widget and money parser accept/normalize number formats differently.
+- **Why this is a bug:** Money must have one clear meaning; users cannot safely approve an amount that changes later.
 - **Where to look:** `design-system/src/components/AmountInput.tsx` and `core/money/src/parse.ts`.
 - **Why it matters:** Values such as exponent notation, commas, or local digits can look different
   from what reaches the ledger.
@@ -121,6 +133,7 @@ test fails on the buggy copy and passes after the suggested correction.
 ### B13 — App appears unlocked before saved lock state loads
 
 - **What is wrong:** The default state is unlocked while persisted lock state is still loading.
+- **Why this is a bug:** When security information is unknown, the safe default is locked, not unlocked.
 - **Where to look:** `platform/lifecycle/src/lock-store.ts` and
   `apps/mobile/src/runtime/AppProviders.tsx`.
 - **Why it matters:** Sensitive content is briefly actionable at cold start.
@@ -130,6 +143,7 @@ test fails on the buggy copy and passes after the suggested correction.
 ### B14 — Biometric errors become success
 
 - **What is wrong:** Outcomes other than success/cancel fall through to the unlock path.
+- **Why this is a bug:** Only a confirmed biometric match should unlock a wallet; an error is not a match.
 - **Where to look:** `platform/biometrics/src/authenticate.ts` and
   `features/auth/src/hooks/useBiometricUnlock.ts`.
 - **Why it matters:** Fallback, unavailable, or not-enrolled states can unlock the app.
@@ -139,6 +153,7 @@ test fails on the buggy copy and passes after the suggested correction.
 ### B15 — Lock screen leaves the sensitive screen alive underneath
 
 - **What is wrong:** The lock view is layered over already-rendered protected content.
+- **Why this is a bug:** A lock screen is not real protection if the private screen still exists behind it.
 - **Where to look:** `apps/mobile/src/runtime/AppProviders.tsx` and
   `platform/lifecycle/src/lock-store.ts`.
 - **Why it matters:** Back navigation or a rendering mistake can reveal the previous screen.
@@ -148,6 +163,7 @@ test fails on the buggy copy and passes after the suggested correction.
 ### B16 — Notification route is trusted without validation
 
 - **What is wrong:** Notification data is cast directly into a route and parameters.
+- **Why this is a bug:** Notification text is input data, so the app must check it before using it to control navigation.
 - **Where to look:** `platform/notifications/src/tap.ts` and
   `apps/mobile/src/runtime/start-platform.ts`.
 - **Why it matters:** Crafted local notification data can open a payment confirmation with attacker
